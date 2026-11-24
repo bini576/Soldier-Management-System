@@ -1,6 +1,6 @@
 <div align="center">
 
-# ðŸª– Military Personnel & Soldier Management System
+# 🪖 Military Personnel & Soldier Management System
 ### High-Performance Command-Line Management Suite Engineered in C++ Using Advanced Data Structures
 
 [![Language: C++17](https://img.shields.io/badge/Language-C%2B%2B17%20%7C%20C%2B%2B20-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)](https://isocpp.org/)
@@ -9,10 +9,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 <p align="center">
-  <a href="#-overview">Overview</a> â€¢
-  <a href="#-key-features">Key Features</a> â€¢
-  <a href="#-data-structures--complexity">Data Structures</a> â€¢
-  <a href="#-compilation--installation">Compilation</a> â€¢
+  <a href="#-overview">Overview</a> •
+  <a href="#-key-features">Key Features</a> •
+  <a href="#-data-structures--complexity">Data Structures</a> •
+  <a href="#-compilation--installation">Compilation</a> •
   <a href="#-usage-guide">Usage</a>
 </p>
 
@@ -20,15 +20,15 @@
 
 ---
 
-## ðŸ“Œ Overview
+## 📌 Overview
 
 The **Soldier Management System** is a modular, memory-efficient console application built in modern C++. Designed for military administrative personnel and defense logistics coordinators, this system manages service records, ranks, deployments, medical clearance states, and unit assignments with deterministic speed and minimal system resource footprint.
 
-Rather than relying on heavyweight database engines, the project demonstrates core Computer Science fundamentalsâ€”implementing custom **Linked Lists**, dynamic memory allocators, fast lookup algorithms, and disk serialization routines directly in C++.
+Rather than relying on heavyweight database engines, the project demonstrates core Computer Science fundamentals—implementing custom **Linked Lists**, dynamic memory allocators, fast lookup algorithms, and disk serialization routines directly in C++.
 
 ---
 
-## âœ¨ Key Features
+## ✨ Key Features
 
 - **Full Personnel Record Lifecycle (CRUD):**
   - **Create:** Enlist new soldiers with unique Service IDs, full name, military rank, combat unit/division, and deployment status.
@@ -42,23 +42,23 @@ Rather than relying on heavyweight database engines, the project demonstrates co
 
 ---
 
-## ðŸ§¬ Data Structures & Complexity Analysis
+## 🧬 Data Structures & Complexity Analysis
 
 ```
   [ Head Pointer ]
-         â”‚
-         â–¼
-  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”      â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”      â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-  â”‚ Soldier Recordâ”‚      â”‚ Soldier Recordâ”‚      â”‚ Soldier Recordâ”‚
-  â”‚ ID: AF-1049   â”‚ â”€â”€â”€â–º â”‚ ID: AF-1050   â”‚ â”€â”€â”€â–º â”‚ ID: AF-1051   â”‚ â”€â”€â”€â–º NULL
-  â”‚ Next: 0x7ffd..â”‚      â”‚ Next: 0x7ffd..â”‚      â”‚ Next: 0x0000..â”‚
-  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜      â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜      â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+         │
+         ▼
+  ┌───────────────┐      ┌───────────────┐      ┌───────────────┐
+  │ Soldier Record│      │ Soldier Record│      │ Soldier Record│
+  │ ID: AF-1049   │ ───► │ ID: AF-1050   │ ───► │ ID: AF-1051   │ ───► NULL
+  │ Next: 0x7ffd..│      │ Next: 0x7ffd..│      │ Next: 0x0000..│
+  └───────────────┘      └───────────────┘      └───────────────┘
 ```
 
 | Component | Underlying Data Structure | Time Complexity (Search) | Time Complexity (Insert) | Time Complexity (Delete) |
 |:---|:---|:---:|:---:|:---:|
 | **Personnel Registry** | Doubly/Singly Linked List | $\mathcal{O}(n)$ | $\mathcal{O}(1)$ | $\mathcal{O}(n)$ |
-| **Sorted Hierarchy** | In-Memory MergeSort / QuickSort | $\mathcal{O}(n \log n)$ | â€” | â€” |
+| **Sorted Hierarchy** | In-Memory MergeSort / QuickSort | $\mathcal{O}(n \log n)$ | — | — |
 | **ID Lookup Index** | Direct ID Pointer Array / Hash Buckets | $\mathcal{O}(1)$ | $\mathcal{O}(1)$ | $\mathcal{O}(1)$ |
 
 ### Why Linked Structures?
@@ -67,7 +67,7 @@ Rather than relying on heavyweight database engines, the project demonstrates co
 
 ---
 
-## ðŸš€ Compilation & Installation
+## 🚀 Compilation & Installation
 
 ### Prerequisites
 - Modern C++ Compiler (`g++`, `clang++`, or MSVC supporting C++17+)
@@ -90,7 +90,7 @@ g++ -std=c++17 -Wall -Wextra -O2 src/*.cpp -o soldier_management.exe
 
 ---
 
-## ðŸ’» Usage Guide
+## 💻 Usage Guide
 
 Launch the compiled executable in your terminal:
 
@@ -133,7 +133,7 @@ Medical Status: Class A (Combat Ready)
 
 ---
 
-## ðŸ›¡ï¸ Memory Safety Best Practices
+## 🛡️ Memory Safety Best Practices
 
 - Explicit pointer hygiene and destructor invocation (`delete` / `free`) preventing dangling pointers.
 - Strict input sanitation on standard input streams (`std::cin`) to prevent buffer exploits and infinite console loops.
@@ -141,7 +141,7 @@ Medical Status: Class A (Combat Ready)
 
 ---
 
-## ðŸ“„ License & Author
+## 📄 License & Author
 
 Distributed under the **MIT License**.
 

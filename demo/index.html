@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Soldier Management System | Biniyam Ademasu</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#070a12;color:#e2e8f0;min-height:100vh}
+:root{--cyan:#00d4ff;--green:#00ff88;--red:#ff4466;--bg:#070a12;--bg2:#0d1117;--bg3:#111827;--border:#1e293b}
+/* Nav */
+nav{background:rgba(13,17,23,0.98);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-logo{font-family:'Fira Code',monospace;font-size:1.1rem;color:var(--cyan)}
+.nav-logo span{color:var(--green)}
+.nav-links a{color:#94a3b8;text-decoration:none;margin-left:20px;font-size:0.85rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--cyan)}
+/* Hero */
+.hero{background:linear-gradient(135deg,#070a12 0%,#0a0f1a 50%,#070a12 100%);border-bottom:1px solid var(--border);padding:60px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center top,rgba(0,212,255,0.08) 0%,transparent 60%)}
+.hero-badge{display:inline-block;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);padding:6px 18px;border-radius:20px;font-size:0.78rem;font-family:'Fira Code',monospace;margin-bottom:20px}
+.hero h1{font-size:2.4rem;font-weight:800;margin-bottom:12px}
+.hero h1 .accent{color:var(--cyan)}
+.hero p{color:#94a3b8;font-size:1rem;max-width:600px;margin:0 auto 24px}
+.hero-stats{display:flex;gap:30px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.stat-pill{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:12px 24px;text-align:center}
+.stat-pill .num{font-size:1.6rem;font-weight:800;color:var(--green)}
+.stat-pill .label{font-size:0.75rem;color:#64748b;text-transform:uppercase;letter-spacing:1px}
+/* Layout */
+.container{max-width:1300px;margin:0 auto;padding:30px 20px}
+.main-grid{display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start}
+/* Panel */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.panel-header{background:linear-gradient(90deg,rgba(0,212,255,0.08),rgba(0,255,136,0.05));border-bottom:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:10px}
+.panel-header h2{font-size:1rem;font-weight:700}
+.panel-header i{color:var(--cyan)}
+.panel-body{padding:20px}
+/* Form */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:0.78rem;color:#94a3b8;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px}
+.form-group input,.form-group select{width:100%;background:#070a12;border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:#e2e8f0;font-size:0.88rem;transition:border-color 0.2s;font-family:'Inter',sans-serif}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 2px rgba(0,212,255,0.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:11px;border:none;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),#0099cc);color:#000}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,212,255,0.3)}
+.btn-danger{background:linear-gradient(135deg,#ff4466,#cc0033);color:#fff;margin-top:8px}
+.btn-secondary{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#e2e8f0}
+/* Tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);padding:0 20px;background:var(--bg3);flex-wrap:wrap}
+.tab{padding:12px 18px;font-size:0.85rem;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.tab:hover:not(.active){color:#e2e8f0}
+.tab-content{display:none;padding:20px}
+.tab-content.active{display:block}
+/* Search */
+.search-bar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.search-bar input,.search-bar select{flex:1;min-width:140px;background:#070a12;border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:#e2e8f0;font-size:0.88rem}
+.search-bar input:focus,.search-bar select:focus{outline:none;border-color:var(--cyan)}
+.search-btn{padding:9px 18px;background:var(--cyan);color:#000;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:0.88rem;white-space:nowrap}
+.search-btn:hover{background:#00b8e0}
+/* Table */
+.table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:0.82rem}
+thead{background:var(--bg3)}
+th{padding:11px 14px;text-align:left;color:#94a3b8;font-weight:600;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.5px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid rgba(30,41,59,0.6);color:#e2e8f0;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(0,212,255,0.03)}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.72rem;font-weight:600}
+.badge-m{background:rgba(0,212,255,0.1);color:var(--cyan)}
+.badge-f{background:rgba(255,100,200,0.1);color:#ff64c8}
+.rank-badge{background:rgba(0,255,136,0.1);color:var(--green);display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.72rem;font-weight:600}
+.action-btns{display:flex;gap:6px}
+.btn-edit,.btn-del{padding:5px 12px;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600}
+.btn-edit{background:rgba(0,212,255,0.12);color:var(--cyan);border:1px solid rgba(0,212,255,0.2)}
+.btn-del{background:rgba(255,68,102,0.12);color:var(--red);border:1px solid rgba(255,68,102,0.2)}
+.btn-edit:hover{background:rgba(0,212,255,0.25)}
+.btn-del:hover{background:rgba(255,68,102,0.25)}
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+.stat-card .s-val{font-size:2rem;font-weight:800;color:var(--cyan)}
+.stat-card .s-lbl{font-size:0.75rem;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-top:4px}
+/* Charts */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chart-box{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px}
+.chart-box h3{font-size:0.9rem;color:#94a3b8;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.bar-chart{display:flex;flex-direction:column;gap:10px}
+.bar-item{display:flex;align-items:center;gap:10px;font-size:0.82rem}
+.bar-item .bar-label{width:90px;color:#94a3b8;text-align:right;flex-shrink:0;font-size:0.78rem}
+.bar-track{flex:1;background:rgba(255,255,255,0.05);border-radius:4px;height:20px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width 0.6s ease;display:flex;align-items:center;padding-left:8px;font-size:0.72rem;font-weight:700;color:#000}
+.bar-count{color:#94a3b8;font-size:0.78rem;width:30px;text-align:right}
+/* Donut */
+.donut-wrap{display:flex;align-items:center;gap:20px}
+.donut{width:100px;height:100px;border-radius:50%;flex-shrink:0}
+.donut-legend{display:flex;flex-direction:column;gap:8px}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:0.8rem;color:#94a3b8}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+/* Empty state */
+.empty{text-align:center;padding:50px 20px;color:#64748b}
+.empty i{font-size:3rem;margin-bottom:12px;opacity:0.3;display:block}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;display:none;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;width:90%;max-width:560px;max-height:90vh;overflow-y:auto}
+.modal h2{font-size:1.1rem;margin-bottom:20px;color:var(--cyan)}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions .btn{width:auto;flex:1}
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--green);color:var(--green);padding:14px 24px;border-radius:10px;font-size:0.88rem;z-index:9999;transform:translateY(100px);opacity:0;transition:all 0.3s;display:flex;align-items:center;gap:10px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.error{border-color:var(--red);color:var(--red)}
+/* Export */
+.export-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.export-btn{padding:8px 16px;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);color:var(--green);border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.export-btn:hover{background:rgba(0,255,136,0.18)}
+/* Back link */
+.back-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 32px;display:flex;align-items:center;gap:16px}
+.back-bar a{color:#64748b;text-decoration:none;font-size:0.82rem;display:flex;align-items:center;gap:6px;transition:color 0.2s}
+.back-bar a:hover{color:var(--cyan)}
+.back-bar .sep{color:#1e293b}
+/* Alert */
+.alert{padding:12px 16px;border-radius:8px;font-size:0.85rem;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.alert-warn{background:rgba(255,180,0,0.08);border:1px solid rgba(255,180,0,0.2);color:#ffd700}
+.pct{color:#94a3b8;font-size:0.78rem;margin-left:4px}
+@media(max-width:900px){.main-grid{grid-template-columns:1fr}.chart-row{grid-template-columns:1fr}}
+@media(max-width:600px){.hero h1{font-size:1.6rem}.hero-stats{gap:12px}}
+</style>
+</head>
+<body>
+
+<!-- Back Bar -->
+<div class="back-bar">
+  <a href="https://bini576.github.io"><i class="fas fa-arrow-left"></i> Portfolio</a>
+  <span class="sep">|</span>
+  <a href="https://github.com/bini576/Soldier-Management-System" target="_blank"><i class="fab fa-github"></i> Source Code</a>
+</div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">&gt; <span>soldier</span>_mgmt.exe</div>
+  <div class="nav-links">
+    <a href="#" onclick="switchTab('roster')"><i class="fas fa-users"></i> Roster</a>
+    <a href="#" onclick="switchTab('analytics')"><i class="fas fa-chart-bar"></i> Analytics</a>
+    <a href="#" onclick="switchTab('search')"><i class="fas fa-search"></i> Search</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge"><i class="fas fa-shield-alt"></i> Military Personnel Management System</div>
+  <h1>Soldier <span class="accent">Management</span> System</h1>
+  <p>Full CRUD operations, advanced search & filter, real-time analytics. All data stored locally in your browser.</p>
+  <div class="hero-stats">
+    <div class="stat-pill"><div class="num" id="h-total">0</div><div class="label">Total Soldiers</div></div>
+    <div class="stat-pill"><div class="num" id="h-active">0</div><div class="label">Officers</div></div>
+    <div class="stat-pill"><div class="num" id="h-avg-salary" style="color:var(--green)">0</div><div class="label">Avg Salary (ETB)</div></div>
+    <div class="stat-pill"><div class="num" id="h-avg-age" style="color:var(--cyan)">0</div><div class="label">Avg Age</div></div>
+  </div>
+</div>
+
+<!-- Main Grid -->
+<div class="container">
+  <div class="main-grid">
+    <!-- Left: Add Soldier Form -->
+    <div>
+      <div class="panel">
+        <div class="panel-header">
+          <i class="fas fa-user-plus"></i>
+          <h2>Enlist Soldier</h2>
+        </div>
+        <div class="panel-body">
+          <form id="soldierForm" onsubmit="addSoldier(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="f-name" placeholder="e.g. John Tesfaye" required/>
+              </div>
+              <div class="form-group">
+                <label>ID Number *</label>
+                <input type="text" id="f-id" placeholder="e.g. ETH-2024-001" required/>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Sex</label>
+                <select id="f-sex">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Age *</label>
+                <input type="number" id="f-age" placeholder="25" min="18" max="65" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Appellation / Rank *</label>
+              <select id="f-rank">
+                <option value="Private">Private</option>
+                <option value="Corporal">Corporal</option>
+                <option value="Sergeant">Sergeant</option>
+                <option value="Lieutenant">Lieutenant</option>
+                <option value="Captain">Captain</option>
+                <option value="Major">Major</option>
+                <option value="Colonel">Colonel</option>
+                <option value="General">General</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Region</label>
+                <select id="f-region">
+                  <option value="Addis Ababa">Addis Ababa</option>
+                  <option value="Amhara">Amhara</option>
+                  <option value="Oromia">Oromia</option>
+                  <option value="Tigray">Tigray</option>
+                  <option value="SNNPR">SNNPR</option>
+                  <option value="Somali">Somali</option>
+                  <option value="Afar">Afar</option>
+                  <option value="Harari">Harari</option>
+                  <option value="Dire Dawa">Dire Dawa</option>
+                  <option value="Benishangul-Gumuz">Benishangul-Gumuz</option>
+                  <option value="Gambela">Gambela</option>
+                  <option value="Sidama">Sidama</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Marital Status</label>
+                <select id="f-marital">
+                  <option value="Single">Single</option>
+                  <option value="Married">Married</option>
+                  <option value="Divorced">Divorced</option>
+                  <option value="Widowed">Widowed</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Salary (ETB/month)</label>
+                <input type="number" id="f-salary" placeholder="8500" min="0"/>
+              </div>
+              <div class="form-group">
+                <label>Height (cm)</label>
+                <input type="number" id="f-height" placeholder="175" min="150" max="220"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Mother's Name</label>
+              <input type="text" id="f-mother" placeholder="e.g. Tigist Alemu"/>
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Enlist Soldier</button>
+            <button type="button" class="btn btn-secondary" style="margin-top:8px" onclick="loadSampleData()"><i class="fas fa-database"></i> Load Sample Data</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Tabs -->
+    <div class="panel">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('roster')"><i class="fas fa-users"></i> Roster</div>
+        <div class="tab" onclick="switchTab('analytics')"><i class="fas fa-chart-bar"></i> Analytics</div>
+        <div class="tab" onclick="switchTab('search')"><i class="fas fa-search"></i> Search</div>
+        <div class="tab" onclick="switchTab('about')"><i class="fas fa-info-circle"></i> About</div>
+      </div>
+
+      <!-- Roster Tab -->
+      <div class="tab-content active" id="tab-roster">
+        <div class="export-row">
+          <button class="export-btn" onclick="exportCSV()"><i class="fas fa-file-csv"></i> Export CSV</button>
+          <button class="export-btn" onclick="exportJSON()"><i class="fas fa-code"></i> Export JSON</button>
+          <span style="color:#64748b;font-size:0.82rem;margin-left:auto;line-height:32px"><span id="roster-count">0</span> soldiers enlisted</span>
+        </div>
+        <div class="alert alert-warn"><i class="fas fa-lock"></i> Data is stored locally in your browser (LocalStorage). No server involved.</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th><th>Name</th><th>ID</th><th>Rank</th><th>Sex</th><th>Age</th><th>Region</th><th>Salary</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="soldierTable"></tbody>
+          </table>
+          <div id="empty-roster" class="empty"><i class="fas fa-users-slash"></i>No soldiers enlisted yet.<br/>Use the form to add your first record or load sample data.</div>
+        </div>
+      </div>
+
+      <!-- Analytics Tab -->
+      <div class="tab-content" id="tab-analytics">
+        <div class="stats-grid" id="analytics-stats"></div>
+        <div class="chart-row">
+          <div class="chart-box">
+            <h3><i class="fas fa-star" style="color:var(--cyan)"></i> By Rank</h3>
+            <div class="bar-chart" id="rank-chart"></div>
+          </div>
+          <div class="chart-box">
+            <h3><i class="fas fa-map-marker-alt" style="color:var(--green)"></i> By Region</h3>
+            <div class="bar-chart" id="region-chart"></div>
+          </div>
+        </div>
+        <div class="chart-row" style="margin-top:16px">
+          <div class="chart-box">
+            <h3><i class="fas fa-venus-mars" style="color:#ff64c8"></i> Gender Distribution</h3>
+            <div class="donut-wrap" id="gender-chart"></div>
+          </div>
+          <div class="chart-box">
+            <h3><i class="fas fa-ring" style="color:#ffd700"></i> Marital Status</h3>
+            <div class="bar-chart" id="marital-chart"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Tab -->
+      <div class="tab-content" id="tab-search">
+        <div class="search-bar">
+          <input type="text" id="s-query" placeholder="Search by name, ID, or mother's name..." oninput="doSearch()"/>
+          <select id="s-sex" onchange="doSearch()">
+            <option value="">Any Sex</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+          <select id="s-rank" onchange="doSearch()">
+            <option value="">Any Rank</option>
+            <option value="Private">Private</option>
+            <option value="Corporal">Corporal</option>
+            <option value="Sergeant">Sergeant</option>
+            <option value="Lieutenant">Lieutenant</option>
+            <option value="Captain">Captain</option>
+            <option value="Major">Major</option>
+            <option value="Colonel">Colonel</option>
+            <option value="General">General</option>
+          </select>
+          <select id="s-region" onchange="doSearch()">
+            <option value="">Any Region</option>
+            <option value="Addis Ababa">Addis Ababa</option>
+            <option value="Amhara">Amhara</option>
+            <option value="Oromia">Oromia</option>
+            <option value="Tigray">Tigray</option>
+            <option value="SNNPR">SNNPR</option>
+            <option value="Somali">Somali</option>
+            <option value="Afar">Afar</option>
+            <option value="Dire Dawa">Dire Dawa</option>
+          </select>
+        </div>
+        <div class="search-bar">
+          <input type="number" id="s-min-age" placeholder="Min Age" oninput="doSearch()" style="max-width:120px"/>
+          <input type="number" id="s-max-age" placeholder="Max Age" oninput="doSearch()" style="max-width:120px"/>
+          <input type="number" id="s-min-sal" placeholder="Min Salary" oninput="doSearch()" style="max-width:140px"/>
+          <input type="number" id="s-max-sal" placeholder="Max Salary" oninput="doSearch()" style="max-width:140px"/>
+          <select id="s-marital" onchange="doSearch()">
+            <option value="">Any Marital</option>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+            <option value="Divorced">Divorced</option>
+            <option value="Widowed">Widowed</option>
+          </select>
+          <button class="search-btn" onclick="clearSearch()"><i class="fas fa-times"></i> Clear</button>
+        </div>
+        <div style="margin-bottom:12px;font-size:0.82rem;color:#64748b"><span id="s-result-count">0</span> results found</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Name</th><th>ID</th><th>Rank</th><th>Sex</th><th>Age</th><th>Region</th><th>Salary</th><th>Marital</th><th>Height</th></tr>
+            </thead>
+            <tbody id="searchTable"></tbody>
+          </table>
+          <div id="empty-search" class="empty"><i class="fas fa-search"></i>No results found.<br/>Try adjusting your search criteria.</div>
+        </div>
+      </div>
+
+      <!-- About Tab -->
+      <div class="tab-content" id="tab-about">
+        <div style="max-width:600px">
+          <h2 style="color:var(--cyan);margin-bottom:16px"><i class="fas fa-shield-alt"></i> About This System</h2>
+          <p style="color:#94a3b8;line-height:1.7;margin-bottom:20px">
+            This Soldier Management System is a web-based adaptation of a C++ data structures project by <strong style="color:#e2e8f0">Biniyam Ademasu Afework</strong>. The original project implemented a doubly linked list to manage military personnel records with full CRUD operations.
+          </p>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">
+            <h3 style="color:#e2e8f0;margin-bottom:12px;font-size:0.95rem"><i class="fas fa-code" style="color:var(--green)"></i> Original C++ Features → Web Features</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.82rem">
+              <div style="color:#94a3b8">✅ Add soldier (linked list insert)</div><div style="color:var(--green)">→ Form-based enlistment</div>
+              <div style="color:#94a3b8">✅ Delete by ID</div><div style="color:var(--green)">→ Delete button per record</div>
+              <div style="color:#94a3b8">✅ Search by name/ID/sex/region</div><div style="color:var(--green)">→ Multi-field live search</div>
+              <div style="color:#94a3b8">✅ Min/Max/Avg salary & age</div><div style="color:var(--green)">→ Analytics dashboard</div>
+              <div style="color:#94a3b8">✅ Count operations</div><div style="color:var(--green)">→ Hero stats panel</div>
+              <div style="color:#94a3b8">✅ Update records</div><div style="color:var(--green)">→ Edit modal</div>
+              <div style="color:#94a3b8">✅ Marital/height/appellation</div><div style="color:var(--green)">→ All 9 fields supported</div>
+              <div style="color:#94a3b8">➕ New: Export CSV/JSON</div><div style="color:var(--green)">→ Browser download</div>
+            </div>
+          </div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px">
+            <h3 style="color:#e2e8f0;margin-bottom:12px;font-size:0.95rem"><i class="fas fa-graduation-cap" style="color:var(--cyan)"></i> Developer</h3>
+            <p style="color:#94a3b8;font-size:0.88rem;line-height:1.6">
+              <strong style="color:#e2e8f0">Biniyam Ademasu Afework</strong><br/>
+              B.Sc. Cyber Security — Bahir Dar University (GPA: 3.43/4.00)<br/>
+              Cybersecurity Analyst | Security Engineer | Full-Stack Developer
+            </p>
+            <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
+              <a href="https://bini576.github.io" style="color:var(--cyan);font-size:0.82rem;text-decoration:none"><i class="fas fa-globe"></i> Portfolio</a>
+              <a href="https://github.com/bini576" target="_blank" style="color:var(--cyan);font-size:0.82rem;text-decoration:none"><i class="fab fa-github"></i> GitHub</a>
+              <a href="https://linkedin.com/in/biniyam-ademasu" target="_blank" style="color:var(--cyan);font-size:0.82rem;text-decoration:none"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h2><i class="fas fa-edit"></i> Edit Soldier Record</h2>
+    <input type="hidden" id="edit-idx"/>
+    <div class="form-row">
+      <div class="form-group"><label>Full Name</label><input type="text" id="e-name"/></div>
+      <div class="form-group"><label>ID Number</label><input type="text" id="e-id"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Sex</label><select id="e-sex"><option>Male</option><option>Female</option></select></div>
+      <div class="form-group"><label>Age</label><input type="number" id="e-age" min="18" max="65"/></div>
+    </div>
+    <div class="form-group"><label>Rank</label>
+      <select id="e-rank"><option>Private</option><option>Corporal</option><option>Sergeant</option><option>Lieutenant</option><option>Captain</option><option>Major</option><option>Colonel</option><option>General</option></select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Region</label>
+        <select id="e-region"><option>Addis Ababa</option><option>Amhara</option><option>Oromia</option><option>Tigray</option><option>SNNPR</option><option>Somali</option><option>Afar</option><option>Harari</option><option>Dire Dawa</option><option>Benishangul-Gumuz</option><option>Gambela</option><option>Sidama</option></select>
+      </div>
+      <div class="form-group"><label>Marital Status</label><select id="e-marital"><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Salary (ETB)</label><input type="number" id="e-salary"/></div>
+      <div class="form-group"><label>Height (cm)</label><input type="number" id="e-height"/></div>
+    </div>
+    <div class="form-group"><label>Mother's Name</label><input type="text" id="e-mother"/></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveEdit()"><i class="fas fa-save"></i> Save Changes</button>
+      <button class="btn btn-secondary" onclick="closeModal()"><i class="fas fa-times"></i> Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA LAYER =====
+let soldiers = JSON.parse(localStorage.getItem('sms_soldiers') || '[]');
+
+function save() {
+  localStorage.setItem('sms_soldiers', JSON.stringify(soldiers));
+}
+
+// ===== SAMPLE DATA =====
+const SAMPLE = [
+  {name:"Abebe Kebede",id:"ETH-2021-001",sex:"Male",age:28,rank:"Sergeant",region:"Addis Ababa",salary:12000,height:178,mother:"Almaz Girma",marital:"Married"},
+  {name:"Tigist Hailu",id:"ETH-2021-002",sex:"Female",age:24,rank:"Corporal",region:"Amhara",salary:9500,height:163,mother:"Mulu Tefera",marital:"Single"},
+  {name:"Dawit Tesfaye",id:"ETH-2020-003",sex:"Male",age:34,rank:"Lieutenant",region:"Oromia",salary:18000,height:182,mother:"Yeshi Worku",marital:"Married"},
+  {name:"Selam Alemu",id:"ETH-2022-004",sex:"Female",age:22,rank:"Private",region:"Tigray",salary:7000,height:160,mother:"Hiwot Teklu",marital:"Single"},
+  {name:"Yonas Girma",id:"ETH-2019-005",sex:"Male",age:38,rank:"Major",region:"SNNPR",salary:28000,height:185,mother:"Tsehay Dagne",marital:"Divorced"},
+  {name:"Meron Bekele",id:"ETH-2021-006",sex:"Female",age:26,rank:"Sergeant",region:"Addis Ababa",salary:13500,height:166,mother:"Birtukan Nega",marital:"Single"},
+  {name:"Tesfaye Worku",id:"ETH-2018-007",sex:"Male",age:42,rank:"Colonel",region:"Amhara",salary:45000,height:180,mother:"Aynalem Desta",marital:"Married"},
+  {name:"Hana Fekadu",id:"ETH-2023-008",sex:"Female",age:21,rank:"Private",region:"Oromia",salary:6500,height:161,mother:"Zeritu Mamo",marital:"Single"},
+  {name:"Biruk Tadesse",id:"ETH-2020-009",sex:"Male",age:30,rank:"Captain",region:"Somali",salary:22000,height:177,mother:"Tigist Lemma",marital:"Married"},
+  {name:"Liyu Mekonnen",id:"ETH-2022-010",sex:"Female",age:25,rank:"Corporal",region:"Dire Dawa",salary:9000,height:164,mother:"Selamawit Desta",marital:"Single"},
+  {name:"Fekadu Assefa",id:"ETH-2016-011",sex:"Male",age:48,rank:"General",region:"Addis Ababa",salary:85000,height:179,mother:"Muluwork Abebe",marital:"Married"},
+  {name:"Rahel Habtamu",id:"ETH-2021-012",sex:"Female",age:27,rank:"Lieutenant",region:"SNNPR",salary:17000,height:168,mother:"Worknesh Girma",marital:"Married"},
+];
+
+function loadSampleData() {
+  if(soldiers.length > 0 && !confirm('This will add 12 sample soldiers to the roster. Continue?')) return;
+  soldiers = [...soldiers, ...SAMPLE];
+  save(); render(); updateHeroStats(); showToast('12 sample soldiers loaded!', false);
+}
+
+// ===== FORM =====
+function addSoldier(e) {
+  e.preventDefault();
+  const id = document.getElementById('f-id').value.trim();
+  if(soldiers.some(s => s.id === id)) { showToast('Soldier ID already exists!', true); return; }
+  soldiers.push({
+    name: document.getElementById('f-name').value.trim(),
+    id, sex: document.getElementById('f-sex').value,
+    age: parseInt(document.getElementById('f-age').value)||0,
+    rank: document.getElementById('f-rank').value,
+    region: document.getElementById('f-region').value,
+    salary: parseInt(document.getElementById('f-salary').value)||0,
+    height: parseInt(document.getElementById('f-height').value)||0,
+    mother: document.getElementById('f-mother').value.trim(),
+    marital: document.getElementById('f-marital').value,
+  });
+  save(); render(); updateHeroStats(); document.getElementById('soldierForm').reset();
+  showToast('Soldier enlisted successfully!', false);
+}
+
+// ===== DELETE =====
+function deleteSoldier(i) {
+  if(!confirm(`Delete soldier "${soldiers[i].name}"? This cannot be undone.`)) return;
+  soldiers.splice(i, 1);
+  save(); render(); updateHeroStats(); doSearch(); showToast('Soldier removed from roster.', false);
+}
+
+// ===== EDIT =====
+function openEdit(i) {
+  const s = soldiers[i];
+  document.getElementById('edit-idx').value = i;
+  document.getElementById('e-name').value = s.name;
+  document.getElementById('e-id').value = s.id;
+  document.getElementById('e-sex').value = s.sex;
+  document.getElementById('e-age').value = s.age;
+  document.getElementById('e-rank').value = s.rank;
+  document.getElementById('e-region').value = s.region;
+  document.getElementById('e-marital').value = s.marital;
+  document.getElementById('e-salary').value = s.salary;
+  document.getElementById('e-height').value = s.height;
+  document.getElementById('e-mother').value = s.mother;
+  document.getElementById('editModal').classList.add('open');
+}
+
+function saveEdit() {
+  const i = parseInt(document.getElementById('edit-idx').value);
+  soldiers[i] = {
+    name: document.getElementById('e-name').value.trim(),
+    id: document.getElementById('e-id').value.trim(),
+    sex: document.getElementById('e-sex').value,
+    age: parseInt(document.getElementById('e-age').value)||0,
+    rank: document.getElementById('e-rank').value,
+    region: document.getElementById('e-region').value,
+    salary: parseInt(document.getElementById('e-salary').value)||0,
+    height: parseInt(document.getElementById('e-height').value)||0,
+    mother: document.getElementById('e-mother').value.trim(),
+    marital: document.getElementById('e-marital').value,
+  };
+  save(); render(); updateHeroStats(); doSearch(); closeModal(); showToast('Record updated!', false);
+}
+
+function closeModal() { document.getElementById('editModal').classList.remove('open'); }
+document.getElementById('editModal').addEventListener('click', e => { if(e.target.id==='editModal') closeModal(); });
+
+// ===== RENDER TABLE =====
+function render() {
+  const tbody = document.getElementById('soldierTable');
+  const empty = document.getElementById('empty-roster');
+  document.getElementById('roster-count').textContent = soldiers.length;
+  if(soldiers.length === 0) { tbody.innerHTML=''; empty.style.display='block'; renderAnalytics(); return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = soldiers.map((s,i) => `
+    <tr>
+      <td style="color:#64748b">${i+1}</td>
+      <td><strong>${s.name}</strong>${s.mother?`<br><span style="color:#64748b;font-size:0.72rem">Mother: ${s.mother}</span>`:''}</td>
+      <td><span style="font-family:'Fira Code',monospace;font-size:0.78rem;color:var(--cyan)">${s.id}</span></td>
+      <td><span class="rank-badge">${s.rank}</span></td>
+      <td><span class="badge ${s.sex==='Male'?'badge-m':'badge-f'}">${s.sex}</span></td>
+      <td>${s.age}<span style="color:#64748b;font-size:0.72rem">y</span>${s.height?`<br><span style="color:#64748b;font-size:0.72rem">${s.height}cm</span>`:''}</td>
+      <td>${s.region}</td>
+      <td style="color:var(--green)">ETB ${s.salary.toLocaleString()}</td>
+      <td><span style="font-size:0.75rem;color:#94a3b8">${s.marital}</span></td>
+      <td><div class="action-btns">
+        <button class="btn-edit" onclick="openEdit(${i})"><i class="fas fa-edit"></i> Edit</button>
+        <button class="btn-del" onclick="deleteSoldier(${i})"><i class="fas fa-trash"></i></button>
+      </div></td>
+    </tr>`).join('');
+  renderAnalytics();
+}
+
+// ===== ANALYTICS =====
+function renderAnalytics() {
+  const n = soldiers.length;
+  const stats = document.getElementById('analytics-stats');
+  if(n===0){stats.innerHTML='<div style="color:#64748b;padding:20px">No data yet. Add soldiers to see analytics.</div>';return;}
+  
+  const ages = soldiers.map(s=>s.age);
+  const sals = soldiers.map(s=>s.salary);
+  const hts  = soldiers.map(s=>s.height).filter(h=>h>0);
+  const minAge=Math.min(...ages),maxAge=Math.max(...ages),avgAge=Math.round(ages.reduce((a,b)=>a+b,0)/n);
+  const minSal=Math.min(...sals),maxSal=Math.max(...sals),avgSal=Math.round(sals.reduce((a,b)=>a+b,0)/n);
+  const avgHt = hts.length?Math.round(hts.reduce((a,b)=>a+b,0)/hts.length):0;
+  
+  stats.innerHTML = [
+    {v:n,l:'Total Soldiers'},
+    {v:avgAge+'y',l:'Avg Age'},{v:minAge+'y',l:'Min Age'},{v:maxAge+'y',l:'Max Age'},
+    {v:'ETB '+avgSal.toLocaleString(),l:'Avg Salary'},{v:'ETB '+minSal.toLocaleString(),l:'Min Salary'},{v:'ETB '+maxSal.toLocaleString(),l:'Max Salary'},
+    {v:avgHt?avgHt+'cm':'N/A',l:'Avg Height'}
+  ].map(s=>`<div class="stat-card"><div class="s-val">${s.v}</div><div class="s-lbl">${s.l}</div></div>`).join('');
+
+  // Rank chart
+  const ranks=['Private','Corporal','Sergeant','Lieutenant','Captain','Major','Colonel','General'];
+  const rankColors=['#4ade80','#60a5fa','#f59e0b','#a78bfa','#f472b6','#00d4ff','#ff6b6b','#ffd700'];
+  const rankCount={};
+  ranks.forEach(r=>rankCount[r]=0);
+  soldiers.forEach(s=>{ if(rankCount[s.rank]!==undefined) rankCount[s.rank]++; });
+  const maxR=Math.max(...Object.values(rankCount),1);
+  document.getElementById('rank-chart').innerHTML = ranks.filter(r=>rankCount[r]>0).map((r,i)=>`
+    <div class="bar-item">
+      <span class="bar-label">${r}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(rankCount[r]/maxR*100)}%;background:${rankColors[i]}">${rankCount[r]}</div></div>
+      <span class="bar-count">${rankCount[r]}</span>
+    </div>`).join('');
+
+  // Region chart
+  const regionCount={};
+  soldiers.forEach(s=>{ regionCount[s.region]=(regionCount[s.region]||0)+1; });
+  const sortedRegions=Object.entries(regionCount).sort((a,b)=>b[1]-a[1]);
+  const maxReg=Math.max(...sortedRegions.map(r=>r[1]),1);
+  document.getElementById('region-chart').innerHTML = sortedRegions.slice(0,8).map(([r,c],i)=>`
+    <div class="bar-item">
+      <span class="bar-label">${r}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/maxReg*100)}%;background:var(--${i%2===0?'green':'cyan'})">${c}</div></div>
+      <span class="bar-count">${c}</span>
+    </div>`).join('');
+
+  // Gender donut
+  const males=soldiers.filter(s=>s.sex==='Male').length;
+  const females=n-males;
+  const mPct=Math.round(males/n*100);
+  const fPct=100-mPct;
+  document.getElementById('gender-chart').innerHTML=`
+    <div class="donut" style="background:conic-gradient(var(--cyan) 0% ${mPct}%, #ff64c8 ${mPct}% 100%)"></div>
+    <div class="donut-legend">
+      <div class="legend-item"><span class="legend-dot" style="background:var(--cyan)"></span>Male: ${males} <span class="pct">(${mPct}%)</span></div>
+      <div class="legend-item"><span class="legend-dot" style="background:#ff64c8"></span>Female: ${females} <span class="pct">(${fPct}%)</span></div>
+    </div>`;
+
+  // Marital
+  const ms=['Single','Married','Divorced','Widowed'];
+  const mc={};ms.forEach(m=>mc[m]=0);soldiers.forEach(s=>{if(mc[s.marital]!==undefined)mc[s.marital]++;});
+  const maxM=Math.max(...Object.values(mc),1);
+  const mColors=['#00ff88','#00d4ff','#ff6b6b','#ffd700'];
+  document.getElementById('marital-chart').innerHTML = ms.filter(m=>mc[m]>0).map((m,i)=>`
+    <div class="bar-item">
+      <span class="bar-label">${m}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(mc[m]/maxM*100)}%;background:${mColors[i]}">${mc[m]}</div></div>
+      <span class="bar-count">${mc[m]}</span>
+    </div>`).join('');
+}
+
+// ===== HERO STATS =====
+function updateHeroStats() {
+  const n=soldiers.length;
+  document.getElementById('h-total').textContent=n;
+  document.getElementById('h-active').textContent=soldiers.filter(s=>['Captain','Major','Colonel','General','Lieutenant'].includes(s.rank)).length;
+  if(n>0){
+    const avgs=Math.round(soldiers.reduce((a,s)=>a+s.salary,0)/n);
+    const avga=Math.round(soldiers.reduce((a,s)=>a+s.age,0)/n);
+    document.getElementById('h-avg-salary').textContent='ETB '+avgs.toLocaleString();
+    document.getElementById('h-avg-age').textContent=avga;
+  } else {
+    document.getElementById('h-avg-salary').textContent='0';
+    document.getElementById('h-avg-age').textContent='0';
+  }
+}
+
+// ===== SEARCH =====
+function doSearch() {
+  const q=(document.getElementById('s-query').value||'').toLowerCase();
+  const sex=document.getElementById('s-sex').value;
+  const rank=document.getElementById('s-rank').value;
+  const region=document.getElementById('s-region').value;
+  const minAge=parseInt(document.getElementById('s-min-age').value)||0;
+  const maxAge=parseInt(document.getElementById('s-max-age').value)||999;
+  const minSal=parseInt(document.getElementById('s-min-sal').value)||0;
+  const maxSal=parseInt(document.getElementById('s-max-sal').value)||999999999;
+  const marital=document.getElementById('s-marital').value;
+  
+  const results=soldiers.filter(s=>{
+    const matchQ=!q||s.name.toLowerCase().includes(q)||s.id.toLowerCase().includes(q)||(s.mother||'').toLowerCase().includes(q);
+    return matchQ&&(!sex||s.sex===sex)&&(!rank||s.rank===rank)&&(!region||s.region===region)&&s.age>=minAge&&s.age<=maxAge&&s.salary>=minSal&&s.salary<=maxSal&&(!marital||s.marital===marital);
+  });
+  
+  document.getElementById('s-result-count').textContent=results.length;
+  const tbody=document.getElementById('searchTable');
+  const empty=document.getElementById('empty-search');
+  if(results.length===0){tbody.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  tbody.innerHTML=results.map((s,i)=>`
+    <tr>
+      <td style="color:#64748b">${i+1}</td>
+      <td><strong>${s.name}</strong></td>
+      <td><span style="font-family:'Fira Code',monospace;font-size:0.78rem;color:var(--cyan)">${s.id}</span></td>
+      <td><span class="rank-badge">${s.rank}</span></td>
+      <td><span class="badge ${s.sex==='Male'?'badge-m':'badge-f'}">${s.sex}</span></td>
+      <td>${s.age}y</td>
+      <td>${s.region}</td>
+      <td style="color:var(--green)">ETB ${s.salary.toLocaleString()}</td>
+      <td>${s.marital}</td>
+      <td>${s.height||'—'}${s.height?'cm':''}</td>
+    </tr>`).join('');
+}
+
+function clearSearch() {
+  ['s-query','s-min-age','s-max-age','s-min-sal','s-max-sal'].forEach(id=>document.getElementById(id).value='');
+  ['s-sex','s-rank','s-region','s-marital'].forEach(id=>document.getElementById(id).value='');
+  doSearch();
+}
+
+// ===== EXPORT =====
+function exportCSV() {
+  if(soldiers.length===0){showToast('No data to export!',true);return;}
+  const h='Name,ID,Sex,Age,Rank,Region,Salary,Height,Mother,Marital';
+  const rows=soldiers.map(s=>`"${s.name}","${s.id}","${s.sex}",${s.age},"${s.rank}","${s.region}",${s.salary},${s.height||''},"${s.mother||''}","${s.marital}"`);
+  const blob=new Blob([[h,...rows].join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='soldiers.csv';a.click();
+  showToast('CSV exported!',false);
+}
+
+function exportJSON() {
+  if(soldiers.length===0){showToast('No data to export!',true);return;}
+  const blob=new Blob([JSON.stringify(soldiers,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='soldiers.json';a.click();
+  showToast('JSON exported!',false);
+}
+
+// ===== TABS =====
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    const ids=['roster','analytics','search','about'];
+    t.classList.toggle('active',ids[i]===id);
+  });
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if(id==='analytics') renderAnalytics();
+  if(id==='search') doSearch();
+}
+
+// ===== TOAST =====
+function showToast(msg, error=false) {
+  const t=document.getElementById('toast');
+  t.innerHTML=`<i class="fas fa-${error?'exclamation-circle':'check-circle'}"></i> ${msg}`;
+  t.className='toast'+(error?' error':'');
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ===== INIT =====
+render(); updateHeroStats(); doSearch();
+</script>
+</body>
+</html>
